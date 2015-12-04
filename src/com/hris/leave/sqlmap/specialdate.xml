@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="specialdate">
+
+	<select id="getSpecialDate" resultClass="com.hris.leave.model.SpecialDateBean" parameterClass="java.util.HashMap">
+			SELECT 
+			special_date_id as "id",
+			TO_CHAR(special_date,'dd Mon yyyy') as "date",
+			description as description,
+			created_by as createUser,
+			create_date as createDate,
+			updated_by as updateUser,
+			update_date as updateDate
+			FROM ms_special_date 
+		<isNotEmpty property="specialDateType">
+			WHERE special_date_type= #specialDateType#
+		</isNotEmpty>
+		<isNotEmpty property="validateSpecialDate">
+			WHERE special_date = TO_DATE(#validateSpecialDate#,'dd/mm/yyyy')
+		</isNotEmpty>
+		<dynamic prepend="AND">
+			<isNotEmpty property="specialDateCategory">
+				<isEqual property="specialDateCategory" compareValue="History">
+					special_date &lt;= SYSDATE	 
+				</isEqual>
+				<isEqual property="specialDateCategory" compareValue="Upcoming">
+					special_date &gt; SYSDATE
+				</isEqual>
+			</isNotEmpty>
+		</dynamic>
+		
+		<isNotEmpty property="categoryYear" prepend="AND">
+			EXTRACT(YEAR FROM special_date) = #categoryYear#
+				<isNotEmpty property="closestSpecialDate" prepend="OR">
+					special_date &gt;= SYSDATE
+					AND special_date &lt;= ADD_MONTHS(SYSDATE,3)
+					AND special_date_type= #specialDateType#
+				</isNotEmpty>
+			ORDER BY special_date
+		</isNotEmpty>
+		<isEmpty property="categoryYear">
+			ORDER BY special_date
+		</isEmpty>
+	
+	</select>
+	
+	<select id="getSpecialDateByInterval" parameterClass="java.util.Map" resultClass="java.lang.String">
+		SELECT 
+			TO_CHAR(special_date,'dd/mm/yyyy')
+		FROM 
+			ms_special_date
+		WHERE 
+			special_date &gt;= TO_DATE(#startDate#,'dd/mm/yyyy') 
+		AND
+			special_date &lt;= TO_DATE(#endDate#,'dd/mm/yyyy')
+	</select>
+	
+	<insert id="insertSpecialDate" parameterClass="com.hris.leave.model.SpecialDateBean">
+		INSERT INTO ms_special_date 
+		(
+			special_date_id, 
+			special_date, 
+			description, 
+			special_date_type, 
+			created_by, 
+			create_date
+		) 
+		VALUES
+		(
+			ms_special_date_seq.nextval, 
+			TO_DATE(#date#,'dd/mm/yyyy'), 
+			#description#,
+			#type#,
+			#createUser#,
+			SYSDATE
+		)
+	</insert>
+	
+	<update id="updateSpecialDate" parameterClass="com.hris.leave.model.SpecialDateBean">
+		UPDATE ms_special_date 
+		SET 
+			special_date = TO_DATE(#date#,'dd/mm/yyyy'), 
+			description = #description#, 
+			updated_by = #updateUser#, 
+			update_date= SYSDATE 
+		WHERE special_date_id=#id#
+	</update>
+	
+	<delete id="deleteSpecialDate" parameterClass="java.lang.String">
+		DELETE FROM ms_special_date 
+		WHERE special_date_id=#specialDateId#
+	</delete>
+	
+	<select id="getCategoryYear" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+		SELECT 
+			DISTINCT TO_CHAR(special_date,'YYYY') as categoryYear 
+			FROM ms_special_date 
+			WHERE special_date_type = #specialDateType#
+			
+		<dynamic prepend="AND">
+			<isNotEmpty property="specialDateCategory">
+				<isEqual property="specialDateCategory" compareValue="History">
+					special_date &lt;= SYSDATE
+					ORDER BY categoryYear DESC
+				</isEqual>
+				<isEqual property="specialDateCategory" compareValue="Upcoming">
+					special_date &gt; SYSDATE
+					ORDER BY categoryYear DESC
+				</isEqual>
+			</isNotEmpty>
+		</dynamic> 
+	</select>
+	
+	<select id="getDefaultCategoryYear" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+		SELECT MAX (EXTRACT(YEAR FROM special_date))
+		FROM ms_special_date
+		WHERE special_date_type= #specialDateType#
+		<dynamic prepend="AND">
+			<isNotEmpty property="specialDateCategory">
+				<isEqual property="specialDateCategory" compareValue="History">
+					special_date &lt;= SYSDATE
+				</isEqual>
+				<isEqual property="specialDateCategory" compareValue="Upcoming">
+					special_date &gt; SYSDATE
+				</isEqual>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getCurrentYear" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT MIN (EXTRACT(YEAR FROM special_date))
+		FROM ms_special_date
+		WHERE special_date_type=#specialDateType#
+		AND special_date &gt; SYSDATE
+	</select>
+</sqlMap>

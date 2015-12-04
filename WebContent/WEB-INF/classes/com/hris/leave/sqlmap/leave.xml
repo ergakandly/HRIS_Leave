@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- leave_id employee_id leave_date leave_type_id description submit_date 
+	 approval_status approval_date -->
+
+<sqlMap namespace="leave">
+	
+	<select id="GetIndividualExtraLeaveQuota" parameterClass="java.lang.String" resultClass="com.hris.leave.model.ExtraQuotaBean">
+		SELECT 
+			extra_leave_quota_id AS extraLeaveQuotaId
+			,employee_id AS employeeId
+			,substituted_date AS substitutedDate
+			,TO_CHAR(expired_date,'dd Mon yyyy') AS expiredDate
+			,description
+			,submit_date AS submitDate
+			,status
+			,approved_by AS approvedBy
+			,approval_date AS approvalDate
+			,approval_comment AS approvalComment
+		FROM
+			tr_extra_leave_quota
+		WHERE 
+			employee_id=#employeeId# 
+		AND 
+			status=2
+	</select>
+	
+	<select id="getApprovalRequest" parameterClass="java.util.HashMap"
+		resultClass="com.hris.leave.model.LeaveBean">
+		SELECT
+			leave.leave_id AS leaveId,
+			emp.employee_id AS employeeId,
+			emp.nik AS employeeNik,
+			emp.employee_name AS employeeName,
+			(SELECT TO_CHAR(MIN(ldet.leave_date),'dd Mon yyyy')
+		     FROM tr_leave_detail ldet
+		     WHERE ldet.leave_id=leave.leave_id) AS firstDayOfLeave,
+		    (SELECT TO_CHAR(MAX(ldet.leave_date),'dd Mon yyyy')
+		     FROM tr_leave_detail ldet
+		     WHERE ldet.leave_id=leave.leave_id) AS lastDayOfLeave,
+		     (SELECT COUNT(*)
+		     FROM tr_leave_detail ldet
+		     WHERE ldet.leave_id=leave.leave_id) AS totalLeaveDay,
+		    leave_type AS leaveType,
+			leave.description AS description,
+			leave.approval_comment,
+			leave.submit_date AS submitDate,
+			leave.approval_status AS approvalStatus
+		FROM 
+			tr_leave leave
+		JOIN 
+			ms_employee emp ON leave.employee_id=emp.employee_id
+		JOIN
+			ms_leave_type type ON leave.leave_type_id=type.leave_type_id
+		WHERE 1=1
+		<dynamic prepend="AND">
+			<isNotEmpty property="employeeId">
+				leave.approved_by=#employeeId#
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="AND">
+			<isNotEmpty property="type">
+				<isEqual property="type" compareValue="Pending">
+	          		approval_status=1
+	          		ORDER BY firstDayOfLeave 
+	          	</isEqual>
+	          	<isEqual property="type" compareValue="PendingCancel">
+	          		approval_status=2
+	          		AND leave.employee_id != #excludedEmployee#
+	          	</isEqual>
+	          	<isEqual property="type" compareValue="History">
+	          		(
+	          			approval_status=3 OR
+	          			approval_status=4 OR
+	          			approval_status=5
+	          		) 
+	          		ORDER BY firstDayOfLeave DESC
+	          	</isEqual>
+          	</isNotEmpty>
+        </dynamic>
+	</select>
+	
+	<select id="getExtraQuotaToUse" parameterClass="java.util.Map" resultClass="com.hris.leave.model.ExtraQuotaBean">
+		SELECT 
+			extra_leave_quota_id AS extraLeaveQuotaId,
+			TO_CHAR(expired_date,'dd/mm/yyyy') AS expiredDate 
+		FROM tr_extra_leave_quota 
+		WHERE expired_date=(
+			SELECT MIN(expired_date) 
+			FROM tr_extra_leave_quota
+			WHERE  expired_date &gt;= TO_DATE(#leaveDate#,'dd/mm/yyyy')
+		)
+		AND employee_id = #employeeId#
+		AND status= 2
+
+	</select>
+	
+	<select id="checkExistingSubstitutedDate" parameterClass="java.util.Map" resultClass="java.lang.String">
+		SELECT
+			CASE
+				WHEN EXISTS(
+					SELECT 
+						extra_leave_quota_id
+					FROM
+						tr_extra_leave_quota
+					WHERE 
+						employee_id=#employeeId#
+					AND
+						substituted_date=TO_DATE(#substitutedDate#,'dd/mm/yyyy')
+					AND
+						status!=3
+				) THEN 1
+		    	ELSE 0
+			END AS result
+		FROM DUAL
+	</select>
+	
+	<select id="getExtraQuotaApprovalRequest" parameterClass="java.lang.String" resultClass="com.hris.leave.model.ExtraQuotaBean">
+		SELECT
+			ext.extra_leave_quota_id AS extraLeaveQuotaId
+			,emp.NIK AS employeeNik
+			,emp.employee_name AS employeeName
+			,TO_CHAR(ext.substituted_date,'dd Mon yyyy') AS substitutedDate
+			,ext.expired_date AS expiredDate
+			,ext.description AS description
+		FROM
+			tr_extra_leave_quota ext
+		JOIN 
+			ms_employee emp ON ext.employee_id=emp.employee_id
+		WHERE
+			approved_by=#employeeId#
+		AND
+			ext.status=1
+	</select>
+
+	
+	<select id="getLeaveApprover" parameterClass="java.lang.String"
+		resultClass="java.util.HashMap">
+		SELECT
+			TO_CHAR(employee_id) AS employeeId
+			,employee_name AS employeeName
+		FROM
+			ms_employee
+		START WITH
+			employee_id=(select manager_id from ms_employee where employee_id=#employeeId#)
+		CONNECT BY PRIOR
+			manager_id = employee_id
+	</select>
+
+	<select id="getLeaveType" resultClass="java.util.HashMap">
+		SELECT
+			TO_CHAR(leave_type_id) AS leaveTypeId,
+			leave_type AS leaveType
+		FROM ms_leave_type
+		WHERE leave_type_id!=5
+		ORDER BY leaveTypeId ASC
+	</select>
+
+	<select id="getIndividualEmployee" parameterClass="java.lang.String"
+		resultClass="com.hris.leave.model.EmployeeBean">
+		SELECT
+			employee_id AS employeeId,
+			employee_name AS employeeName,
+			department AS departmentName,
+			current_leave_quota AS currentLeaveQuota,
+			TO_CHAR(ADD_MONTHS(renewal_date,6),'dd Mon yyyy') AS currentQuotaExpiredDate,
+			TO_CHAR(last_leave_quota) AS lastQuota,
+			TO_CHAR(expired_date,'dd Mon yyyy') AS lastQuotaExpiredDate,
+			TO_CHAR(reward_leave_quota) AS rewardQuota,
+			TO_CHAR(renewal_date,'dd Mon yyyy') AS rewardQuotaExpiredDate,
+			TO_CHAR(renewal_date,'dd Mon yyyy') AS renewalDate
+		FROM
+			ms_employee emp
+		JOIN
+			ms_department dept ON emp.department_id=dept.department_id
+		WHERE
+			employee_id =#employeeId#
+	</select>
+	
+	<select id="getAllEmployees" resultClass="com.hris.leave.model.EmployeeBean" parameterClass="java.util.HashMap"> 
+		SELECT 
+			employee_id AS employeeId, 
+			nik as employeeNik,
+			employee_name AS employeeName, 
+			department AS departmentName, 
+			location AS locationName 
+			FROM 
+			ms_employee emp 
+			JOIN 
+			ms_department dept ON emp.department_id=dept.department_id 
+			JOIN 
+			ms_location loc ON emp.location_id = loc.location_id 	
+		WHERE 1=1 
+		<isNotEmpty property="departmentId" prepend="AND"> 
+			dept.department_id = #departmentId# 
+		</isNotEmpty> 
+		<isNotEmpty property="employeeName" prepend="AND">
+			LOWER(employee_name) LIKE LOWER ('%'||#employeeName#||'%') 
+		</isNotEmpty> 
+		
+		ORDER BY employee_name 
+	</select>
+	
+	<select id="getAllDepartments" resultClass="java.util.HashMap">
+		SELECT
+			department_id AS departmentId,
+			department AS department
+		FROM ms_department
+		ORDER BY department
+	</select>
+	
+	<select id="getLeaveDetail" parameterClass="java.lang.String" resultClass="com.hris.leave.model.LeaveDetailBean">
+		SELECT 
+		    leave_detail_id AS leaveDetailId,
+		    leave_id AS leaveId, 
+		    TO_CHAR(leave_date,'dd Mon yyyy') AS leaveDate,
+		    TO_CHAR(leave_date,'Day','NLS_DATE_LANGUAGE = ENGLISH') as leaveDay
+		FROM
+		    tr_leave_detail
+		WHERE 
+		    leave_id=#leaveId#
+	</select>
+	
+	<select id="getIndividualLeave" parameterClass="java.util.Map" resultClass="com.hris.leave.model.LeaveBean">
+		SELECT 
+		    leave.leave_id AS leaveId,
+		    ltype.leave_type AS leaveType,
+		    leave.employee_id AS employeeId,
+		    leave.description AS description,
+		    TO_CHAR(leave.submit_date,'dd Mon yyyy') AS submitDate,
+		    TO_CHAR(leave.approval_date,'dd Mon yyyy') AS approvalDate,
+		    TO_CHAR(leave.expired_date,'dd Mon yyyy') AS expiredDate,
+		    emp.employee_name AS approvedBy,
+		    (SELECT TO_CHAR(MIN(ldet.leave_date),'dd Mon yyyy')
+		     FROM tr_leave_detail ldet
+		     WHERE ldet.leave_id=leave.leave_id) AS firstDayOfLeave,
+		    (SELECT TO_CHAR(MAX(ldet.leave_date),'dd Mon yyyy')
+		     FROM tr_leave_detail ldet
+		     WHERE ldet.leave_id=leave.leave_id) AS lastDayOfLeave,
+		     (SELECT COUNT(*)
+		     FROM tr_leave_detail ldet
+		     WHERE ldet.leave_id=leave.leave_id) AS totalLeaveDay,
+		     approval_status AS approvalStatus,
+		     approval_comment AS approvalComment,
+		     approval_date AS approvalDate,
+		     extra_leave_quota_id AS extraQuotaId
+		FROM tr_leave leave
+		JOIN ms_leave_type ltype on leave.leave_type_id=ltype.leave_type_id
+		JOIN ms_employee emp on leave.approved_by=emp.employee_id
+		WHERE 1=1
+		<dynamic prepend="AND">
+			<isNotEmpty property="leaveId">
+				leave.leave_id=#leaveId#
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="AND">
+			<isNotEmpty property="employeeId">
+				leave.employee_id = #employeeId#
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="AND">
+			<isNotEmpty property="context">
+				<isEqual property="context" compareValue="histori">
+					(
+						leave.expired_date &lt; TRUNC(sysdate)
+						OR approval_status=5
+						OR approval_status=4
+					)
+					ORDER BY firstDayOfLeave 
+				</isEqual>
+				<isEqual property="context" compareValue="current">
+					(
+						leave.expired_date &gt;= TRUNC(sysdate)
+						AND ( approval_status=1
+						OR approval_status=2
+						OR approval_status=3 )
+					)
+					ORDER BY firstDayOfLeave 
+				</isEqual>
+			</isNotEmpty>
+		</dynamic>
+		<dynamic prepend="AND">
+			<isNotEmpty property="categoryYear">
+					EXTRACT(YEAR FROM submit_date) = #categoryYear#
+					ORDER BY firstDayOfLeave DESC
+			</isNotEmpty>
+		</dynamic> 
+	</select>
+
+	<select id="getLeaveByInterval" parameterClass="java.util.Map" resultClass="java.lang.String">
+	 	SELECT 
+	 		TO_CHAR(leave_date,'dd/mm/yyyy')
+	 	FROM 
+	 		tr_leave_detail det
+	 	JOIN 
+            tr_leave lv on det.leave_id=lv.leave_id
+	 	WHERE 
+	 		employee_id=#employeeId# 
+	 	AND
+	 		leave_date BETWEEN TO_DATE(#startDate#,'dd/mm/yyyy') AND TO_DATE(#endDate#,'dd/mm/yyyy')
+	 	AND
+	 		approval_status NOT IN(4,5)
+	</select>
+	
+	<select id="checkAttendance" parameterClass="java.util.Map" resultClass="java.lang.String">
+		SELECT attendance_id
+		FROM tr_attendance 
+		WHERE employee_id=#employeeId# AND TRUNC(check_in)=TO_DATE(#date#,'dd/mm/yyyy')
+	</select>
+	
+	<select id="getCategoryYear" parameterClass="java.lang.String" resultClass="java.lang.String">
+		SELECT DISTINCT TO_CHAR(submit_date,'YYYY') as categoryYear
+		FROM tr_leave leave
+		WHERE employee_id = #employeeId#
+		ORDER BY categoryYear DESC
+	</select>
+	
+	<select id="checkUsedCurrentQuota" parameterClass="java.lang.String" resultClass="java.lang.Integer">
+		SELECT COUNT(*) 
+		FROM tr_leave_detail det
+		WHERE leave_date >
+		(
+		    SELECT expired_date
+		    from ms_employee
+		    where employee_id=#employeeId#
+		) AND (
+		    SELECT approval_status
+		    from tr_leave leave
+		    where det.leave_id=leave.leave_id
+		) NOT IN(4,5)
+	</select>
+	
+	<insert id="addLeave" parameterClass="com.hris.leave.model.LeaveBean">
+		INSERT INTO tr_leave
+		(
+			leave_id,
+			employee_id,
+			leave_type_id,
+			description,
+			submit_date,
+			expired_date,
+			approved_by,
+			approval_status
+			<isNotEmpty property="extraQuotaId">
+				,extra_leave_quota_id
+			</isNotEmpty>
+		)
+		VALUES(
+			tr_leave_seq.NEXTVAL,
+			#employeeId#,
+			#leaveType#,
+			#description#,
+			SYSDATE,
+			TO_DATE(#expiredDate#,'dd/mm/yyyy'),
+			#approvedBy#,
+			#approvalStatus#
+			<isNotEmpty property="extraQuotaId">
+				,#extraQuotaId#
+			</isNotEmpty>
+		)		
+	</insert>
+	
+	<insert id="addExtraQuota" parameterClass="com.hris.leave.model.ExtraQuotaBean">
+		INSERT INTO tr_extra_leave_quota
+		(
+			EXTRA_LEAVE_QUOTA_ID
+			,EMPLOYEE_ID
+			,SUBSTITUTED_DATE
+			,EXPIRED_DATE
+			,DESCRIPTION
+			,SUBMIT_DATE
+			,STATUS
+			,APPROVED_BY
+			,APPROVAL_DATE
+			,APPROVAL_COMMENT
+		)
+		VALUES
+		(
+			tr_extra_leave_quota_seq.NEXTVAL,
+			#employeeId#,
+			TO_DATE(#substitutedDate#,'dd/mm/yyyy'),
+			ADD_MONTHS(TO_DATE(#substitutedDate#,'dd/mm/yyyy'),2),
+			#description#,
+			SYSDATE,
+			#status#,
+			#approvedBy#,
+			#approvalDate#,
+			#approvalComment#
+		)
+	</insert>
+	
+	<insert id="addLeaveDetail" parameterClass="com.hris.leave.model.LeaveDetailBean">
+		INSERT INTO tr_leave_detail
+		(
+			leave_detail_id,
+			leave_id,
+			leave_date
+		)
+		VALUES(
+			tr_leave_detail_seq.NEXTVAL,
+			tr_leave_seq.CURRVAL,
+			TO_DATE(#leaveDate#,'dd/mm/yyyy')
+		)
+	</insert>
+	
+	<update id="updateLeaveQuota" parameterClass="java.util.Map">
+		UPDATE ms_employee
+		SET
+		<isEqual property="type" compareValue="yearly">
+			last_leave_quota=#lastQuota#,
+			current_leave_quota=#currentQuota#
+		</isEqual>
+		<isEqual property="type" compareValue="reward">
+			reward_leave_quota=#rewardQuota#
+		</isEqual>
+		WHERE 
+			employee_id=#employeeId#
+	</update>
+
+	<update id="updateLeaveApprovalStatus" parameterClass="com.hris.leave.model.LeaveBean">
+		UPDATE tr_leave
+		SET 
+			approval_status=#approvalStatus#,
+			<isEmpty property="approvalDate">
+				approval_date=SYSDATE,
+			</isEmpty>
+				approval_comment=#approvalComment#
+		WHERE leave_id=#leaveId#
+	</update>
+	
+	<update id="updateExtraQuotaApprovalStatus" parameterClass="com.hris.leave.model.ExtraQuotaBean">
+		UPDATE tr_extra_leave_quota
+		SET status=#status#,
+			approval_date=SYSDATE,
+			approval_comment=#approvalComment#
+		WHERE extra_leave_quota_id=#extraLeaveQuotaId#
+			
+	</update>
+	
+	<update id="updateExtraQuotaUsageStatus" parameterClass="java.util.Map">
+		UPDATE tr_extra_leave_quota
+		SET status=#status#
+		WHERE extra_leave_quota_id=#extraLeaveQuotaId#
+	</update>
+	
+	<delete id="deleteLeaveRecord" parameterClass="java.lang.String">
+		DELETE FROM tr_leave
+		WHERE leave_id = #leaveId#
+	</delete>
+	
+	<procedure id="doEodManual" parameterClass="java.lang.String">
+		{call HRIS_LEAVE_EOD_PROCESS.DailyEOD(#userName#)}
+	</procedure>
+</sqlMap>

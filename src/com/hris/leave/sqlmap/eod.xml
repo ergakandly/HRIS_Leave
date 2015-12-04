@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="eod">
+	
+	<select id="getLastEod" resultClass="com.hris.leave.model.EodBean">
+		SELECT 
+		TO_CHAR(eod_date,'dd/mm/yyyy') as eodDate,
+		eod_actor as eodActor,
+		CASE
+			WHEN  eod_date &lt; TRUNC(SYSDATE) THEN 1
+		ELSE 0
+		END AS flagEod
+		FROM tr_eod_log
+		WHERE eod_date = (SELECT MAX(eod_date) FROM tr_eod_log)
+	</select>
+	
+<!-- 	<insert id="insertEodManually" parameterClass="com.hris.leave.model.EodBean"> -->
+<!-- 		INSERT  -->
+<!-- 		INTO tr_eod_log  -->
+<!-- 		VALUES -->
+<!-- 			( -->
+<!-- 				tr_eod_log_seq.nextval,  -->
+<!-- 				(SELECT MAX(eod_date)+1), -->
+<!-- 				 #eodActor# -->
+<!-- 			) -->
+<!-- 	</insert> -->
+</sqlMap>

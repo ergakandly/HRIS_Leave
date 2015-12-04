@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts-config PUBLIC
+       "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+       "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+       
+<struts-config>
+	<form-beans>
+		<form-bean name="leaveForm" type="com.hris.leave.form.LeaveForm"></form-bean>
+		<form-bean name="specialDateForm" type="com.hris.leave.form.SpecialDateForm"></form-bean>
+	</form-beans>
+	
+	<action-mappings>
+		<action path="/leaveAction" name="leaveForm" type="com.hris.leave.handler.LeaveAction" scope="request">
+			<forward name="menu" path="/WEB-INF/jsp/MainMenu.jsp" />
+			<forward name="eod" path="/WEB-INF/jsp/EOD.jsp"/>
+			<forward name="masterMassLeave" path="/WEB-INF/jsp/MasterMassLeave.jsp"/>
+			<forward name="masterNationalHoliday" path="/WEB-INF/jsp/MasterNationalHoliday.jsp"/>
+			<forward name="leaveApproval" path="/WEB-INF/jsp/LeaveApproval.jsp"/>
+			<forward name="leaveExtraApproval" path="/WEB-INF/jsp/ExtraLeaveApproval.jsp"/>
+			<forward name="leaveList" path="/WEB-INF/jsp/LeaveList.jsp"/>
+			<forward name="leaveListAllEmployees" path="/WEB-INF/jsp/LeaveListAllEmployees.jsp"/>
+			<forward name="leaveInput" path="/WEB-INF/jsp/LeaveRequest.jsp"/>
+			<forward name="leaveExtraInput" path="/WEB-INF/jsp/ExtraLeaveRequest.jsp"/>
+			<forward name="leaveCancellationApproval" path="/WEB-INF/jsp/CancelLeaveApproval.jsp"/>
+		</action>
+		<action path="/manageSpecialDate" parameter="method" name="specialDateForm" type="com.hris.leave.handler.SpecialDateAction" scope="request">
+			<forward name="mleavelist" path="/WEB-INF/jsp/MasterMassLeave.jsp"/>
+			<forward name="nholidaylist" path="/WEB-INF/jsp/MasterNationalHoliday.jsp"/>
+		</action>
+	</action-mappings>
+	
+	<message-resources parameter="ApplicationResources"/>
+	
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn" >
+		<set-property property="pathnames"
+		value="/WEB-INF/validator-rules.xml"/>
+   	</plug-in>
+	
+</struts-config>

@@ -1,0 +1,416 @@
+@CHARSET "ISO-8859-1";
+
+/*====== ALIGN ===========*/
+.tengah {
+	text-align: center;
+}
+
+.kiri {
+	text-align: left;
+}
+
+.kanan {
+	text-align: right;
+}
+/*====== END ALIGN ===========*/
+
+/*====== COLOR ===========*/
+.fontHitam {
+	color: blue !important;
+}
+
+.fontMerah {
+	color: red;
+}
+
+.fontBold {
+	font-weight: bold;
+}
+
+.backgroundRed {
+	background-color: red;
+}
+
+.backgroundGreen {
+	background-color: green;
+}
+/*====== END COLOR ===========*/
+
+/*====== TABLE ===========*/
+td.width15 {
+	width: 15%;
+}
+
+td.width30 {
+	width: 30%;
+}
+
+td.width100 {
+	width: 1000%;
+}
+
+.table-borderless td, .table-borderless th {
+	border: 0 !important;
+}
+
+.table-nonfluid {
+	width: auto !important;
+}
+
+.non-fluid{
+	width: auto !important;
+}
+/*======END TABLE ===========*/
+
+/*====== KHUSUS HRIS_PORTAL ===========*/
+.iconDashboard {
+	height: 200px;
+	width: 200px;
+}
+/*====== END KHUSUS HRIS_PORTAL ===========*/
+
+/*======KHUSUS HRIS_EMPLOYEE =======*/
+.subheader-height {
+	height: 10 !important;
+}
+/* ======================== */
+
+/*====== OTHERS ===========*/
+#timeline {
+	margin: 0px 0px -7px 0px;
+}
+
+.row {
+	height: 100%;
+}
+
+#page-wrapper {
+	min-height: 592px;
+}
+
+.btn {
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+.form-control {
+ border-bottom-right-radius: 15px;
+ border-top-left-radius: 15px;
+ padding-top: 2px;
+ padding-bottom: 2px;
+ height: 22px !important;
+}
+
+.form-textarea {
+        border-bottom-right-radius: 15px;
+        border-top-left-radius: 15px;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        width: 235px !important;
+        resize: none;
+}
+
+
+.nopadding {
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+}
+
+hr {
+	size: 50px;
+}
+
+body {
+ font-family: 'Roboto', sans-serif;
+}
+
+div.modal div.modal-backdrop {
+	z-index: 0;
+}
+
+.datepicker {
+	z-index: 1151 !important;
+}
+
+#timeText {
+	padding-top: 14px;
+	color: white;
+	font-weight: normal;
+}
+/*====== END OTHERS ===========*/
+
+/*====== WARNA NAVBAR =========*/
+.navbar-inverse {
+	background-color: #337AB7;
+	border-color: #337AB7
+}
+
+#warnaPutih {
+	color: white;
+}
+
+.navbar-inverse .navbar-text>li>a {
+	color: #fff
+}
+
+.navbar-inverse .navbar-nav>li>a {
+	color: #fff
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover,
+	.navbar-inverse .navbar-nav>.active>a:focus {
+	color: white;
+	font-weight: bold;
+	background-color: #5f9dd3 !important;
+}
+
+.badge {
+  background-color: #e60000;
+}
+/*====== END WARNA NAVBAR =========*/
+
+/*==== STYLE DATE TIME PICKER ====*/
+.timepicker-picker .table-condensed td {
+	text-align: center
+}
+
+/*======STYLE INPUT ADDON=====*/
+.input-addon-resize{
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 22px !important;
+}
+
+/*======PLUS MINUS ADDON=====*/
+.input-number-resize{
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 22px !important;
+}
+
+.form-width {
+	width: 200px !important;
+}
+
+/*=== back to top ====*/
+#toTop{
+	position: fixed;
+	bottom: 10px;
+	right: 500px;
+	cursor: pointer;
+	display: none;
+	background-color: #337AB7;
+}
+
+/*==== panel history ====*/
+.panel-grey {
+	border-color: #c0c0c0
+}
+
+.panel-grey>.panel-heading {
+	color: #5a5a5a;
+	background-color: #c0c0c0;
+	border-color: #c0c0c0
+}
+
+.panel-grey>.panel-heading+.panel-collapse>.panel-body {
+	border-top-color: #c0c0c0
+}
+
+.panel-grey>.panel-heading .badge {
+	color: #c0c0c0;
+	background-color: #5a5a5a
+}
+
+.panel-grey>.panel-footer+.panel-collapse>.panel-body {
+	border-bottom-color: #c0c0c0
+}
+
+/*====== form control kecil=========*/
+.form-control-resize {
+ border-bottom-right-radius: 15px;
+ border-top-left-radius: 15px;
+ padding-top: 2px;
+ padding-bottom: 2px;
+ height: 22px !important;
+ width: 64px !important;
+}
+
+/* validator feedback */
+.form-control-feedback {
+	line-height: 23px;
+}
+
+/* Status Box Primary*/
+.status {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.status .panel-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 60px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 30px;
+    padding-top: 20px;
+    letter-spacing: -0.8px;
+}
+
+/* Status Box Additional*/
+
+.status .panel-title2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    color: #fff;
+    line-height: 10px;
+    letter-spacing: -0.8px;
+    margin : 0px 0px 0px 0px;
+    padding : 0px 0px 0px 0px;
+}
+
+/* ======================== edwin ================= */
+
+/* Panel custom - mango */
+.panel-mango {
+  border-color: #FFD54F;
+}
+.panel-mango > .panel-heading {
+  color: #FF8F00;
+  background-color: #FFD54F;
+  border-color: #FFD54F;
+}
+.panel-mango > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #FFD54F;
+}
+.panel-mango > .panel-heading .badge {
+  color: #FFD54F;
+  background-color: #FF8F00;
+}
+.panel-mango > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #FFD54F;
+}
+
+/* Panel custom - lime */
+.panel-lime {
+  border-color: #AED581;
+}
+.panel-lime > .panel-heading {
+  color: #558B2F;
+  background-color: #AED581;
+  border-color: #AED581;
+}
+.panel-lime > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #AED581;
+}
+.panel-lime > .panel-heading .badge {
+  color: #AED581;
+  background-color: #558B2F;
+}
+.panel-lime > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #AED581;
+}
+
+/* Panel custom - rose */
+.panel-rose {
+  border-color: #CE93D8;
+}
+.panel-rose > .panel-heading {
+  color: #6A1B9A;
+  background-color: #CE93D8;
+  border-color: #CE93D8;
+}
+.panel-rose > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #CE93D8;
+}
+.panel-rose > .panel-heading .badge {
+  color: #CE93D8;
+  background-color: #6A1B9A;
+}
+.panel-rose > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #CE93D8;
+}
+
+/* Panel custom - candy */
+.panel-candy {
+  border-color: #E57373;
+}
+.panel-candy > .panel-heading {
+  color: #C62828;
+  background-color: #E57373;
+  border-color: #E57373;
+}
+.panel-candy > .panel-heading + .panel-collapse > .panel-body {
+  border-top-color: #E57373;
+}
+.panel-candy > .panel-heading .badge {
+  color: #E57373;
+  background-color: #C62828;
+}
+.panel-candy > .panel-footer + .panel-collapse > .panel-body {
+  border-bottom-color: #E57373;
+}
+
+/* ==== form control with various size (edwin) ==== */
+
+.form-control-mn {
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 22px !important;
+	z-index: 0 !important; 
+	width: 80px !important;
+}
+
+.form-control-sm {
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 22px !important;
+	z-index: 0 !important; 
+	width: 135px !important;
+}
+
+.form-control-md {
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 22px !important;
+	z-index: 0 !important; 
+	width: 235px !important;
+}
+
+.form-control-lg {
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 22px !important;
+	z-index: 0 !important; 
+	width: 375px !important;
+}
+
+.form-control-feedback {
+	line-height: 23px;
+}
+
+.form-control-md-1 {
+	border-bottom-right-radius: 15px;
+	border-top-left-radius: 15px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	height: 22px !important;
+	z-index: 0 !important; 
+	width: 185px !important;
+}
