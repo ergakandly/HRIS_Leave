@@ -79,7 +79,7 @@
 											<tbody>
 												<tr>
 
-													<td class="kanan">Substituted Date :</td>
+													<td class="kanan">Substituted Date <font color="red">*</font>:</td>
 													<td>
 														<div class="form-group">
 															<div class="input-group">
@@ -94,7 +94,7 @@
 
 												</tr>
 												<tr>
-													<td class="kanan">Description :</td>
+													<td class="kanan">Description <font color="red">*</font>:</td>
 													<td><div class="form-group">
 															<html:textarea name="leaveForm" property="description" styleClass="form-textarea"></html:textarea>
 														</div></td>

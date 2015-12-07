@@ -87,7 +87,7 @@
 														</html:select></td>
 												</tr>
 												<tr id="td1">
-													<td class="kanan">First Day of Leave :</td>
+													<td class="kanan">First Day of Leave <font color="red">*</font>:</td>
 													<td>
 														<div class="form-group">
 															<div class="input-group">
@@ -100,7 +100,7 @@
 													</td>
 												</tr>
 												<tr id="td2">
-													<td class="kanan">Last Day of Leave :</td>
+													<td class="kanan">Last Day of Leave <font color="red">*</font>:</td>
 													<td>
 														<div class="form-group">
 															<div class="input-group">
@@ -113,7 +113,7 @@
 													</td>
 												</tr>
 												<tr id="td3">
-													<td class="kanan">Leave Date :</td>
+													<td class="kanan">Leave Date <font color="red">*</font>:</td>
 													<td>
 														<div class="form-group">
 														<div class="input-group">
@@ -126,7 +126,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td class="kanan">Description :</td>
+													<td class="kanan">Description <font color="red">*</font>:</td>
 			
 													<td>
 														<div class="form-group">

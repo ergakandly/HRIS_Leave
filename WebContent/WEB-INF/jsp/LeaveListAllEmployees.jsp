@@ -104,8 +104,8 @@
 				<div class="modal-body">
 						<table id="employeeData" class="table table-condensed table-borderless">
 							<tr>
-								<td class="kanan fontBold">Employee NIK</td>
-								<td id="leaveModalEmpNik">1</td>
+								<td class="kanan fontBold" width="50%">Employee NIK</td>
+								<td id="leaveModalEmpNik" width="50%"></td>
 							</tr>
 							<tr>
 								<td class="kanan fontBold">Employee Name</td>

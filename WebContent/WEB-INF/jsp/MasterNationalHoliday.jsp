@@ -226,14 +226,14 @@
 						<table align="center"
 							class="table table-nonfluid table-hover table-nonfluid table-borderless">
 							<tr>
-								<td class="fontBold kanan">Date :</td>
+								<td class="fontBold kanan">Date <font color="red">*</font>:</td>
 								<td><div class="form-group">
 								<input name="currentSpecialDateBean.date" type="text"
 									class="span form-control form-control-md" id="dpd1"
 									readonly="readonly"></input></div></td>
 							</tr>
 							<tr>
-								<td class="fontBold kanan">Description :</td>
+								<td class="fontBold kanan">Description <font color="red">*</font>:</td>
 								<td><div class="form-group"><html:textarea name="specialDateForm" styleClass="form-textarea"
 										property="currentSpecialDateBean.description"></html:textarea></div></td>
 							</tr>
