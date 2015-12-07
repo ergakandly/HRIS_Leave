@@ -45,12 +45,11 @@ public class LeaveAction extends Action {
 		LeaveForm objForm = (LeaveForm) form;
 		
 		HttpSession session = request.getSession(false);
-		String param = null;
 		//check session jika ada parameter yang diterima
 		if (null!=request.getParameter("zx") && LeaveUtil.isBase64(request.getParameter("zx").replace(' ', '+'))) {
 			//parameter diterima
 			System.out.println("LEAVE Check session dari parameter.");
-			param = request.getParameter("zx").replace(' ', '+');
+			String param = request.getParameter("zx").replace(' ', '+');
 			String user[] = LeaveUtil.decrypt(param).split("##");
 			
 			// cek apakah memang data memiliki hak akses
@@ -75,10 +74,7 @@ public class LeaveAction extends Action {
 			}
 		}
 		objForm.setUrlPortal(objLeaveManager.getPortalUrl());
-		System.out.println("Portal URL: "+objLeaveManager.getPortalUrl());
-		
 		request.setAttribute("zx", "?zx="+LeaveUtil.createParameter(session));
-		System.out.println("coba: "+LeaveUtil.createParameter(session));
 		
 		System.out.println("Task:"+objForm.getTask());
 		

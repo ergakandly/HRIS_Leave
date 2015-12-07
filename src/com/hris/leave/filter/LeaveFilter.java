@@ -1,6 +1,8 @@
 package com.hris.leave.filter;
 
 import java.io.IOException;
+import java.net.URL;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -43,6 +45,7 @@ public class LeaveFilter implements Filter {
 		HttpServletResponse res = (HttpServletResponse) response;
 		
 		String uri = req.getRequestURI();
+		URL url = new URL(req.getRequestURL().toString());
 		this.context.log("Requested Resource::LEAVE");
 		
 		HttpSession session = req.getSession(false);
@@ -51,7 +54,8 @@ public class LeaveFilter implements Filter {
 			this.context.log("Unauthorized access request - LEAVE");
 			
 			LeaveManager objLeaveManager = new LeaveManager();
-			res.sendRedirect("http://localhost:8080"+objLeaveManager.getPortalUrl());
+			System.out.println("Go to "+url.getProtocol()+"://"+url.getAuthority()+":"+url.getPort()+objLeaveManager.getPortalUrl());
+			res.sendRedirect(url.getProtocol()+"://"+url.getAuthority()+":"+url.getPort()+objLeaveManager.getPortalUrl());
 		}
 		else
 			chain.doFilter(request, response);
