@@ -32,7 +32,9 @@
 
 						<!-- BREADCRUMB -->
 						<ul class="breadcrumb">
-							<li><span class="fa fa-dashboard"></span><a href="#">Dashboard</a></li>
+							<li><span class="fa fa-dashboard"></span>
+								<a href="location.href='<bean:write name="leaveForm" property="urlPortal"/><%= request.getAttribute("zx") %>'">Dashboard</a>
+							</li>
 							<li><span class="fa fa-paper-plane"></span><a href="javascript:navigateToPage('mainMenu')">&nbsp;Leave</a></li>
 							<li><span class="fa fa-question-circle"></span> Extra Quota Request</li>
 						</ul>

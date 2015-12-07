@@ -36,7 +36,6 @@ public class LeaveAction extends Action {
 	private LeaveManager objLeaveManager=new LeaveManager();
 	private SpecialDateManager objSpecialDateManager=new SpecialDateManager();
 	private EodManager objEodManager = new EodManager();
-	private String parameter;
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -59,7 +58,6 @@ public class LeaveAction extends Action {
 				//parameter yang akan dikirim
 				System.out.println("LEAVE param dikirim: "+ param);
 				request.setAttribute("zx", param);
-				parameter = param;
 				
 				System.out.println("LEAVE Set session "+user[0]+".");
 				session.setAttribute("username", user[0]);
@@ -74,10 +72,14 @@ public class LeaveAction extends Action {
 				System.out.println("LEAVE "+session.getAttribute("username")+" tidak terautorisasi. Session dihancurkan.");
 				if (null != session)
 					session.invalidate();
-			}	
+			}
 		}
-		objForm.setParameter(parameter);
-		System.out.println(objForm.getParameter());
+		objForm.setUrlPortal(objLeaveManager.getPortalUrl());
+		System.out.println("Portal URL: "+objLeaveManager.getPortalUrl());
+		
+		request.setAttribute("zx", "?zx="+LeaveUtil.createParameter(session));
+		System.out.println("coba: "+LeaveUtil.createParameter(session));
+		
 		System.out.println("Task:"+objForm.getTask());
 		
 		//BUAT TESTING--------------------------------------------------

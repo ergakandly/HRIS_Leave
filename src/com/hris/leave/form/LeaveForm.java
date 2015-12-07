@@ -62,8 +62,7 @@ public class LeaveForm extends ActionForm {
 	private String error;
 	private String info;
 	
-	//session
-	private String parameter;
+	private String urlPortal;
 	
 	// public List<LeaveDetailBean> getEmployeeLeaveDetail() {
 	// return employeeLeaveDetail;
@@ -73,31 +72,26 @@ public class LeaveForm extends ActionForm {
 	// employeeLeaveDetail) {
 	// this.employeeLeaveDetail = employeeLeaveDetail;
 	// }
+//	
 	
 	public String getError() {
 		return error;
+	}	
+	
+	public String getUrlPortal() {
+		return urlPortal;
 	}
-	
-	
-	
+
+	public void setUrlPortal(String urlPortal) {
+		this.urlPortal = urlPortal;
+	}
+
 	public String getInfo() {
 		return info;
 	}
 
-
-
 	public void setInfo(String info) {
 		this.info = info;
-	}
-
-
-
-	public String getParameter() {
-		return parameter;
-	}
-
-	public void setParameter(String parameter) {
-		this.parameter = parameter;
 	}
 
 	public void setError(String error) {

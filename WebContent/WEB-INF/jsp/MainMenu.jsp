@@ -30,7 +30,9 @@
 
 						<!-- BREADCRUMB -->
 						<ul class="breadcrumb">
-							<li><span class="fa fa-dashboard"></span><a href="#">Dashboard</a></li>
+							<li><span class="fa fa-dashboard"></span>
+								<a href="<bean:write name="leaveForm" property="urlPortal"/><%= request.getAttribute("zx") %>">Dashboard</a>
+							</li>
 							<li><span class="fa fa-paper-plane"></span> Leave</li>
 						</ul>
 						<!-- END BREADCRUMB -->
