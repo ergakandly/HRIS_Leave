@@ -209,16 +209,9 @@
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav side-nav">
 				<!-- SIDEBAR 0 -->
-				<logic:equal name="leaveForm" property="currentSideBar" value="0">
-					<li class="active"><a
-						href="javascript:navigateToPage('mainMenu');"><i
-							class="fa fa-paper-plane"></i> HRIS Leave</a></li>
-				</logic:equal>
-				<logic:notEqual name="leaveForm" property="currentSideBar" value="0">
-					<li><a href="javascript:navigateToPage('mainMenu');"><i
-							class="fa fa-paper-plane"></i> HRIS Leave</a></li>
-				</logic:notEqual>
-
+					<li><a><i
+							class="fa fa-paper-plane"></i> Leave Management</a></li>
+							
 				<!-- SIDEBAR 1a dan 1b -->
 				<li><a href="javascript:;" data-toggle="collapse"
 					data-target="#demo2"><i class="fa fa-fw fa-arrows-v"></i>
@@ -263,7 +256,7 @@
 								class="fa fa-check-square-o"></i> Extra Quota</a></li>
 					</ul></li>
 
-				<% if(session.getAttribute("roleId").toString().equals("1")||session.getAttribute("roleId").toString().equals("2")){ %>
+				<% if(session.getAttribute("roleId").toString().equals("1")||session.getAttribute("roleId").toString().equals("3")){ %>
 						<li><a href="javascript:;" data-toggle="collapse"
 							data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> HR
 								Menu <i class="fa fa-fw fa-caret-down"></i></a>

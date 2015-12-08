@@ -315,13 +315,14 @@ public class LeaveAction extends Action {
 	
 		} 
 		
-		request.setAttribute("lala","lalala");
-		String currentMassLeaveYear = objSpecialDateManager.getCurrentYear(SpecialDateBean.MASS_LEAVE_TYPE);
-		String currentNationalHolidayYear = objSpecialDateManager.getCurrentYear(SpecialDateBean.NATIONAL_HOLIDAY_TYPE);
-		objForm.setUpcomingMassleave(objSpecialDateManager.getSpecialDate(SpecialDateBean.MASS_LEAVE_TYPE, SpecialDateBean.UPCOMING, currentMassLeaveYear,"TRUE"));
-		objForm.setUpcomingNationalHoliday(objSpecialDateManager.getSpecialDate(SpecialDateBean.NATIONAL_HOLIDAY_TYPE, SpecialDateBean.UPCOMING,currentNationalHolidayYear,"TRUE"));
-		return mapping.findForward("menu");
-	
+		return goToLeaveRequest(mapping,objForm);
+//		request.setAttribute("lala","lalala");
+//		String currentMassLeaveYear = objSpecialDateManager.getCurrentYear(SpecialDateBean.MASS_LEAVE_TYPE);
+//		String currentNationalHolidayYear = objSpecialDateManager.getCurrentYear(SpecialDateBean.NATIONAL_HOLIDAY_TYPE);
+//		objForm.setUpcomingMassleave(objSpecialDateManager.getSpecialDate(SpecialDateBean.MASS_LEAVE_TYPE, SpecialDateBean.UPCOMING, currentMassLeaveYear,"TRUE"));
+//		objForm.setUpcomingNationalHoliday(objSpecialDateManager.getSpecialDate(SpecialDateBean.NATIONAL_HOLIDAY_TYPE, SpecialDateBean.UPCOMING,currentNationalHolidayYear,"TRUE"));
+//		return mapping.findForward("menu");
+//	
 	}
 	
 	private ActionForward goToEodPage(ActionMapping mapping, LeaveForm objForm) {
