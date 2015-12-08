@@ -44,18 +44,14 @@ public class LeaveFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		
-		String uri = req.getRequestURI();
-		URL url = new URL(req.getRequestURL().toString());
 		this.context.log("Requested Resource::LEAVE");
-		
 		HttpSession session = req.getSession(false);
 		
-		if (null == session && !(uri.endsWith("do") || null == session.getAttribute("username"))) {
+		if (null == session.getAttribute("username")) {
 			this.context.log("Unauthorized access request - LEAVE");
 			
 			LeaveManager objLeaveManager = new LeaveManager();
-			System.out.println("Go to "+url.getProtocol()+"://"+url.getAuthority()+":"+url.getPort()+objLeaveManager.getPortalUrl());
-			res.sendRedirect(url.getProtocol()+"://"+url.getAuthority()+":"+url.getPort()+objLeaveManager.getPortalUrl());
+			res.sendRedirect(objLeaveManager.getPortalUrl());
 		}
 		else
 			chain.doFilter(request, response);
