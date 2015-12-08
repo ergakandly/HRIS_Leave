@@ -9,6 +9,7 @@ import java.util.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -36,6 +37,7 @@ public class LeaveAction extends Action {
 	private LeaveManager objLeaveManager=new LeaveManager();
 	private SpecialDateManager objSpecialDateManager=new SpecialDateManager();
 	private EodManager objEodManager = new EodManager();
+	HttpSession session =null;
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
@@ -44,7 +46,7 @@ public class LeaveAction extends Action {
 		
 		LeaveForm objForm = (LeaveForm) form;
 		
-		HttpSession session = request.getSession(false);
+		session = request.getSession(false);
 		//check session jika ada parameter yang diterima
 		if (null!=request.getParameter("zx") && LeaveUtil.isBase64(request.getParameter("zx").replace(' ', '+'))) {
 			//parameter diterima
@@ -82,13 +84,13 @@ public class LeaveAction extends Action {
 		System.out.println("Task:"+objForm.getTask());
 		
 		//BUAT TESTING--------------------------------------------------
-		  /*HttpSession session=request.getSession();
-		  session.setAttribute("username", "donny.setiawan"); 
-		  session.setAttribute("password", "donny"); 
-		  session.setAttribute("roleId", "2"); 
-		  session.setAttribute("userId", "22"); 
-		  session.setAttribute("employeeId", "2"); 
-		  session.setAttribute("employeeName", "Donny Setiawan");*/
+//		  session=request.getSession();
+//		  session.setAttribute("username", "donny.setiawan"); 
+//		  session.setAttribute("password", "donny"); 
+//		  session.setAttribute("roleId", "3"); 
+//		  session.setAttribute("userId", "22"); 
+//		  session.setAttribute("employeeId", "4"); 
+//		  session.setAttribute("employeeName", "Donny Setiawan");
 		//--------------------------------------------------------------
 		  
 		objForm.setCurrentEmployee(objLeaveManager.getIndividualEmployeeData(session.getAttribute("employeeId").toString()));
@@ -313,6 +315,7 @@ public class LeaveAction extends Action {
 	
 		} 
 		
+		request.setAttribute("lala","lalala");
 		String currentMassLeaveYear = objSpecialDateManager.getCurrentYear(SpecialDateBean.MASS_LEAVE_TYPE);
 		String currentNationalHolidayYear = objSpecialDateManager.getCurrentYear(SpecialDateBean.NATIONAL_HOLIDAY_TYPE);
 		objForm.setUpcomingMassleave(objSpecialDateManager.getSpecialDate(SpecialDateBean.MASS_LEAVE_TYPE, SpecialDateBean.UPCOMING, currentMassLeaveYear,"TRUE"));
@@ -378,7 +381,11 @@ public class LeaveAction extends Action {
 			LeaveForm objForm) {
 		 
 		System.out.println("masuk halaman extra quota approval");
-		objForm.setExtraQuotaList(objLeaveManager.getExtraQuotaApprovalRequest(objForm.getCurrentEmployee().getEmployeeId()));
+		
+		if(session!=null && session.getAttribute("roleId").toString().equals("1"))
+			objForm.setExtraQuotaList(objLeaveManager.getExtraQuotaApprovalRequest(""));
+		else
+			objForm.setExtraQuotaList(objLeaveManager.getExtraQuotaApprovalRequest(objForm.getCurrentEmployee().getEmployeeId()));
 		return mapping.findForward("leaveExtraApproval");
 	}
 
@@ -485,7 +492,11 @@ public class LeaveAction extends Action {
 		form.setCurrentSideBar("4");
 		
 		//kasih kondisi super admin=load semua yg pending
-		form.setEmployeeLeaveList(objLeaveManager.getApprovalRequest(form.getCurrentEmployee().getEmployeeId(), LeaveBean.PENDING));
+		if(session!=null && session.getAttribute("roleId").toString().equals("1"))
+			form.setEmployeeLeaveList(objLeaveManager.getApprovalRequest("", LeaveBean.PENDING));
+		else
+			form.setEmployeeLeaveList(objLeaveManager.getApprovalRequest(form.getCurrentEmployee().getEmployeeId(), LeaveBean.PENDING));
+		
 		form.setEmployeeHistoryLeaveList(objLeaveManager.getApprovalRequest(form.getCurrentEmployee().getEmployeeId(),LeaveBean.HISTORY));
 		return mapping.findForward("leaveApproval");
 	}
@@ -509,7 +520,7 @@ public class LeaveAction extends Action {
 		if(objForm.getCurrentEmployee().getCurrentLeaveQuota().equals("0") && objForm.getCurrentEmployee().getLastQuota().equals("0"))
 		{
 			Map map=new HashMap();
-			map.put("LEAVETYPEID", LeaveBean.REWARD_LEAVE_TYPE);
+			map.put("LEAVETYPEID", LeaveBean.YEARLY_LEAVE_TYPE);
 			map.put("LEAVETYPE", "Cuti Tahunan");
 			objForm.getLeaveType().remove(map);
 		}
@@ -584,6 +595,11 @@ public class LeaveAction extends Action {
 			} catch (SQLException e) {
 				 
 				form.setError("Failed to submit request due to database issue");
+				e.printStackTrace();
+				
+			} catch(Exception e){
+				
+				form.setError("Unknown error. failed to submit your request");
 				e.printStackTrace();
 			}
 		
@@ -888,7 +904,7 @@ public class LeaveAction extends Action {
 			EmployeeBean employee, String leaveType) throws LeaveException, ParseException {
 		
 		SimpleDateFormat digitMonth=new SimpleDateFormat("dd/MM/yyyy");
-		SimpleDateFormat nameMonth=new SimpleDateFormat("dd MMM yyyy");
+		SimpleDateFormat nameMonth=new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
 		Date start= digitMonth.parse(startDate);
 		Date end= digitMonth.parse(lastDate);
 		Date expired=nameMonth.parse(employee.getCurrentQuotaExpiredDate());

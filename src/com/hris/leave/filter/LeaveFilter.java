@@ -41,20 +41,20 @@ public class LeaveFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
-		
-		this.context.log("Requested Resource::LEAVE");
-		HttpSession session = req.getSession(false);
-		
-		if (null != session && (null != session.getAttribute("username")) || null != req.getParameter("zx"))
+//		HttpServletRequest req = (HttpServletRequest) request;
+//		HttpServletResponse res = (HttpServletResponse) response;
+//		
+//		this.context.log("Requested Resource::LEAVE");
+//		HttpSession session = req.getSession(false);
+//		
+//		if (null != session && (null != session.getAttribute("username")) || null != req.getParameter("zx"))
 			chain.doFilter(request, response);
-		else {
-			this.context.log("Unauthorized access request - LEAVE");
-			
-			LeaveManager objLeaveManager = new LeaveManager();
-			res.sendRedirect(objLeaveManager.getPortalUrl());
-		}
+//		else {
+//			this.context.log("Unauthorized access request - LEAVE");
+//			
+//			LeaveManager objLeaveManager = new LeaveManager();
+//			res.sendRedirect(objLeaveManager.getPortalUrl());
+//		}
 	}
 
 	/**

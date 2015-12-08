@@ -14,7 +14,7 @@
 	<div id="wrapper">
 		<%@include file="PartNavbar.jsp"%>
 		<div id="page-wrapper">
-
+			<bean:write scope="session" name="roleId"/>
 			<!-- CONTAINER -->
 			<div class="container-fluid">
 				<div class="row">

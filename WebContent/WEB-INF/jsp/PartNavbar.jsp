@@ -262,34 +262,35 @@
 						<li><a href="javascript:navigateToPage('leaveExtraApproval')"><i
 								class="fa fa-check-square-o"></i> Extra Quota</a></li>
 					</ul></li>
-				
-				<%   if(session.getAttribute("roleId").equals("2")){  %>
-				<li><a href="javascript:;" data-toggle="collapse"
-					data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> HR
-						Menu <i class="fa fa-fw fa-caret-down"></i></a>
-					<ul id="demo" class="collapse">
-						<li><a
-							href="javascript:navigateToPage('leaveCancellationApproval')"> <span
-								class="fa fa-check-square-o"></span> Approve Leave Cancellation
-						</a></li>
-						
-						<li><a
-							href="javascript:navigateToPage('leaveListAllEmployees');"> <span
-								class="fa fa-list"></span> View All Employees Leave
-						</a></li>
 
-						<li><a href="javascript:navigateToPage('masterMassLeave');">
-								<span class="fa fa-reply-all"></span> Manage Mass Leave
-						</a></li>
-						<li><a
-							href="javascript:navigateToPage('masterNationalHoliday');"> <span
-								class="fa fa-calendar"></span> Manage National Holiday
-						</a></li>
-						<li><a href="javascript:navigateToPage('eod');"> <span
-								class="fa fa-clock-o"></span> EOD Manually
-						</a></li>
-					</ul></li>
-				<%} %>
+				<% if(session.getAttribute("roleId").toString().equals("1")||session.getAttribute("roleId").toString().equals("2")){ %>
+						<li><a href="javascript:;" data-toggle="collapse"
+							data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> HR
+								Menu <i class="fa fa-fw fa-caret-down"></i></a>
+							<ul id="demo" class="collapse">
+								<li><a
+									href="javascript:navigateToPage('leaveCancellationApproval')"> <span
+										class="fa fa-check-square-o"></span> Approve Leave Cancellation
+								</a></li>
+								
+								<li><a
+									href="javascript:navigateToPage('leaveListAllEmployees');"> <span
+										class="fa fa-list"></span> View All Employees Leave
+								</a></li>
+		
+								<li><a href="javascript:navigateToPage('masterMassLeave');">
+										<span class="fa fa-reply-all"></span> Manage Mass Leave
+								</a></li>
+								<li><a
+									href="javascript:navigateToPage('masterNationalHoliday');"> <span
+										class="fa fa-calendar"></span> Manage National Holiday
+								</a></li>
+								<li><a href="javascript:navigateToPage('eod');"> <span
+										class="fa fa-clock-o"></span> EOD Manually
+								</a></li>
+							</ul></li>
+					<%} %>
+
 			</ul>
 		</div>
 		<!-- END SIDEBAR --> </nav>

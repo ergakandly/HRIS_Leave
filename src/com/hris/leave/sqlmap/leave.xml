@@ -130,9 +130,12 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 		JOIN 
 			ms_employee emp ON ext.employee_id=emp.employee_id
 		WHERE
-			approved_by=#employeeId#
-		AND
 			ext.status=1
+		<dynamic prepend="AND">
+			<isNotEmpty> 
+				approved_by=#employeeId#
+			</isNotEmpty>
+		</dynamic>
 	</select>
 
 	
