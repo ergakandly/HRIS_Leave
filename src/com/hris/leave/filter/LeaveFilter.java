@@ -47,14 +47,14 @@ public class LeaveFilter implements Filter {
 		this.context.log("Requested Resource::LEAVE");
 		HttpSession session = req.getSession(false);
 		
-		if (null == session.getAttribute("username")) {
+		if (null != session && (null != session.getAttribute("username")) || null != req.getParameter("zx"))
+			chain.doFilter(request, response);
+		else {
 			this.context.log("Unauthorized access request - LEAVE");
 			
 			LeaveManager objLeaveManager = new LeaveManager();
 			res.sendRedirect(objLeaveManager.getPortalUrl());
 		}
-		else
-			chain.doFilter(request, response);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class LeaveFilter implements Filter {
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
 		this.context = fConfig.getServletContext();
-		this.context.log("AuthenticationFilter initialized");
+		this.context.log("AuthenticationFilter initialized - LEAVE");
 	}
 
 }

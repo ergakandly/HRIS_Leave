@@ -71,6 +71,9 @@ public class LeaveAction extends Action {
 				System.out.println("LEAVE "+session.getAttribute("username")+" tidak terautorisasi. Session dihancurkan.");
 				if (null != session)
 					session.invalidate();
+				
+				response.sendRedirect(objLeaveManager.getPortalUrl());
+				return null;
 			}
 		}
 		objForm.setUrlPortal(objLeaveManager.getPortalUrl());
@@ -297,13 +300,15 @@ public class LeaveAction extends Action {
 			else if ("logout".equalsIgnoreCase(objForm.getTask()))
 			{
 				session = request.getSession(false);
-				
 				objLeaveManager.updateStatusLogin(session.getAttribute("username").toString(), 0);
 				System.out.println("PORTAL "+session.getAttribute("username")+" logout.");
 				
 				if(session != null)
 		    		session.invalidate();
-				System.out.println("PORTAL Kembali ke halaman login.");
+				
+				System.out.println("LEAVE menuju PORTAL");
+				response.sendRedirect(objLeaveManager.getPortalUrl());
+				return null;
 			}
 	
 		} 
