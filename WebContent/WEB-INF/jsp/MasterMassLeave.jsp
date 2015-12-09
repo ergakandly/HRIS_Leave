@@ -91,7 +91,6 @@
 						</ul>
 						<!-- END BREADCRUMB -->
 						
-<!-- 						<div id="message"></div> -->
 						<logic:notEmpty name="specialDateForm" property="error"> 
 					       <div class="alert alert-danger alert-dismissible" role="alert"> 
 					          <button type="button" class="close" data-dismiss="alert" 
