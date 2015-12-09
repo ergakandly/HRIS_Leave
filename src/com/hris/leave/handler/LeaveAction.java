@@ -9,7 +9,6 @@ import java.util.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -512,7 +511,7 @@ public class LeaveAction extends Action {
 	
 		//cek kalo udh ga punya kuota, gausah munculin pilihan cutinya
 		if(objForm.getCurrentEmployee().getRewardQuota().equals("0")){
-			Map map=new HashMap();
+			Map<String, String> map=new HashMap<String, String>();
 			map.put("LEAVETYPEID", LeaveBean.REWARD_LEAVE_TYPE);
 			map.put("LEAVETYPE", "Cuti Reward");
 			objForm.getLeaveType().remove(map);
@@ -520,14 +519,14 @@ public class LeaveAction extends Action {
 		
 		if(objForm.getCurrentEmployee().getCurrentLeaveQuota().equals("0") && objForm.getCurrentEmployee().getLastQuota().equals("0"))
 		{
-			Map map=new HashMap();
+			Map<String, String> map=new HashMap<String, String>();
 			map.put("LEAVETYPEID", LeaveBean.YEARLY_LEAVE_TYPE);
 			map.put("LEAVETYPE", "Cuti Tahunan");
 			objForm.getLeaveType().remove(map);
 		}
 		
 		if(objForm.getExtraQuotaList().size()==0){
-			Map map=new HashMap();
+			Map<String, String> map=new HashMap<String, String>();
 			map.put("LEAVETYPEID", LeaveBean.EXTRA_LEAVE_TYPE);
 			map.put("LEAVETYPE", "Cuti Extra");
 			objForm.getLeaveType().remove(map);
